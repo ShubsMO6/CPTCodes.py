@@ -3,7 +3,7 @@ import pygame
 
 SCREEN_SIZE = 810, 600
 
-# Object dimensions
+# Game object dimensions
 BRICK_WIDTH = 90
 BRICK_HEIGHT = 30
 PADDLE_WIDTH = 80
@@ -37,7 +37,7 @@ class Bricka:
         pygame.mixer.pre_init(44100, 16, 2, 4096)
         pygame.init()
 
-        self.screen = pygame.display.set_mode(SCREEN_SIZE)
+        self.screen = pygame.display.set_mode(SCREEN_SIZE) #Setting up screen
         pygame.display.set_caption("Brick Breaker by Jonathan and Shab")
 
         self.clock = pygame.time.Clock()
@@ -53,11 +53,11 @@ class Bricka:
 
         self.init_game()
 
-    def init_game(self):
+    def init_game(self): #The lives of the user while playing
         self.lives = 3
         self.score = 0
         self.state = STATE_BALL_IN_PADDLE
-
+#creating the paddle and ball (below)
         self.paddle = pygame.Rect(300, PADDLE_Y, PADDLE_WIDTH, PADDLE_HEIGHT)
         self.ball = pygame.Rect(300, PADDLE_Y - BALL_DIAMETER, BALL_DIAMETER, BALL_DIAMETER)
 
@@ -67,7 +67,7 @@ class Bricka:
 
         self.counter = 0
 
-    def create_bricks(self):
+    def create_bricks(self): #Creating the bricks, x amount of bricks by y amount of bricks
         y_ofs = 10
         self.bricks = []
         for i in range(6):
@@ -84,17 +84,17 @@ class Bricka:
     def check_input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT]: #Paddle movement by right arrow key
             self.paddle.left -= 20
             if self.paddle.left < 0:
                 self.paddle.left = 0
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT]: #Paddle Movement by left arrow key
             self.paddle.left += 20
             if self.paddle.left > MAX_PADDLE_X:
                 self.paddle.left = MAX_PADDLE_X
 
-        if keys[pygame.K_SPACE] and self.state == STATE_BALL_IN_PADDLE:
+        if keys[pygame.K_SPACE] and self.state == STATE_BALL_IN_PADDLE: #Begins the start of the game when the spacebar is pressed; music also plays
             self.ball_vel = [10, -10]
             self.state = STATE_PLAYING
             pygame.mixer.music.load('GameMusic.mp3')
@@ -107,14 +107,14 @@ class Bricka:
         self.ball.left += self.ball_vel[0]
         self.ball.top += self.ball_vel[1]
 
-        if self.ball.left <= 0:
+        if self.ball.left <= 0: #Ball movement
             self.ball.left = 0
             self.ball_vel[0] = -self.ball_vel[0]
         elif self.ball.left >= MAX_BALL_X:
             self.ball.left = MAX_BALL_X
             self.ball_vel[0] = -self.ball_vel[0]
 
-        if self.ball.top < 0:
+        if self.ball.top < 0: #Balls limitations and movement
             self.ball.top = 0
             self.ball_vel[1] = -self.ball_vel[1]
         elif self.ball.top >= MAX_BALL_Y:
@@ -128,7 +128,7 @@ class Bricka:
                 self.ball_vel[1] = -self.ball_vel[1]
                 self.bricks.remove(brick)
                 self.counter = self.counter + 1
-                if self.counter > 5 == 0:
+                if self.counter > 5 == 0: #create the different speeds for the ball, as more bricks are destroyed (from velocity 10 to 15 to 20)
                     self.ball_vel = [10,-10]
                 if self.counter > 10 == 0:
                     self.ball_vel = [15,-15]
@@ -137,9 +137,9 @@ class Bricka:
                 break
 
         if len(self.bricks) == 0:
-            self.state = STATE_WON
+            self.state = STATE_WON #When the number of bricks is 0, it will proceed to the winning state
 
-        if self.ball.colliderect(self.paddle): #describes what is to happen when the ball collides with an object
+        if self.ball.colliderect(self.paddle): #Describes what is to happen when the ball collides with an object
             self.ball.top = PADDLE_Y - BALL_DIAMETER
             self.ball_vel[1] = -self.ball_vel[1]
         elif self.ball.top > self.paddle.top:
@@ -147,7 +147,7 @@ class Bricka:
             if self.lives > 0:
                 self.state = STATE_BALL_IN_PADDLE
             else:
-                pygame.mixer.music.load('GameOver.mp3')
+                pygame.mixer.music.load('GameOver.mp3') #Plays the game music
                 pygame.mixer.music.set_volume(0.05)
                 pygame.mixer.music.play(1)
                 self.state = STATE_GAME_OVER
@@ -162,7 +162,7 @@ class Bricka:
 
     def score_calc(self): #calculates and reports the score onto the screen
         f = open('score.txt', 'r')
-        self.highscore = f.readline()
+        self.highscore = f.readline() # Accesses the high-score file and evaluates to see if the current score is greater than the highscore, if it is, it replaces the last highscore
         if int(self.score) > int(self.highscore):
             self.highscore = self.score
             f = open('score.txt', 'w')
@@ -171,7 +171,7 @@ class Bricka:
         if self.font:
             if int(self.score) == int(self.highscore) and self.state == STATE_GAME_OVER:
                 f = open('score.txt', 'r')
-                self.score = f.readline()
+                self.score = f.readline() #scans the highscore file to read the now achieved high-score
                 font_surface = self.font.render("SCORE: " + str(self.score) + " LIVES: " + str(self.lives) + "    YOU GOT A HIGH-SCORE! ", False, WHITE)
                 self.screen.blit(font_surface, (205, 5))
             else:
@@ -181,7 +181,7 @@ class Bricka:
     def run(self):
         while 1:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT: #for any event that would result in closing the game, it quits the program
                     pygame.display.quit()
 
             self.clock.tick(50)
@@ -192,9 +192,9 @@ class Bricka:
                 self.move_ball()
                 self.handle_collisions()
             elif self.state == STATE_BALL_IN_PADDLE:
-                self.ball.left = self.paddle.left + self.paddle.width / 2
+                self.ball.left = self.paddle.left + self.paddle.width / 2 #paddle movement when ball is not in air yet
                 self.ball.top = self.paddle.top - self.ball.height
-                self.show_message("PRESS SPACE TO LAUNCH THE BALL")
+                self.show_message("PRESS SPACE TO LAUNCH THE BALL") #alerting user of events that start the game
             elif self.state == STATE_GAME_OVER:
                 self.show_message("GAME OVER. PRESS ENTER TO PLAY AGAIN")
             elif self.state == STATE_WON:
@@ -214,5 +214,5 @@ class Bricka:
             pygame.display.flip()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": #running the program
     Bricka().run()
