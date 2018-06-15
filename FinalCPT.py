@@ -49,7 +49,7 @@ class Bricka:
 
         pygame.mixer.music.load('GameMusic.mp3')
         pygame.mixer.music.set_volume(0.05)
-        pygame.mixer.music.play(-1)
+        pygame.mixer.music.play(-3)
 
         self.init_game()
 
@@ -97,6 +97,9 @@ class Bricka:
         if keys[pygame.K_SPACE] and self.state == STATE_BALL_IN_PADDLE:
             self.ball_vel = [10, -10]
             self.state = STATE_PLAYING
+            pygame.mixer.music.load('GameMusic.mp3')
+            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.play(-3)
         elif keys[pygame.K_RETURN] and (self.state == STATE_GAME_OVER or self.state == STATE_WON):
             self.init_game()
 
@@ -149,12 +152,6 @@ class Bricka:
                 pygame.mixer.music.play(1)
                 self.state = STATE_GAME_OVER
 
-
-    def show_stats(self):
-        if self.font:
-            font_surface = self.font.render("SCORE: " + str(self.score) + " LIVES: " + str(self.lives), False, WHITE)
-            self.screen.blit(font_surface, (205, 5))
-
     def show_message(self, message):
         if self.font:
             size = self.font.size(message)
@@ -163,7 +160,22 @@ class Bricka:
             y = (SCREEN_SIZE[1] - size[1]) / 2
             self.screen.blit(font_surface, (x, y))
 
-
+    def score_calc(self):
+        f = open('score.txt', 'r')
+        self.highscore = f.readline()
+        if self.score > int(self.highscore):
+            self.highscore = self.score
+            f = open('score.txt', 'w')
+            f.write(str(self.highscore))
+        if self.font:
+            if int(self.score) > int(self.highscore):
+                f = open('score.txt', 'r')
+                self.score = f.readline()
+                font_surface = self.font.render("SCORE: " + str(self.score) + " LIVES: " + " YOU GOT A HIGH-SCORE! "+ str(self.lives), False, WHITE)
+                self.screen.blit(font_surface, (205, 5))
+            else:
+                font_surface = self.font.render("SCORE: " + str(self.score) + " LIVES: " + str(self.lives), False, WHITE)
+                self.screen.blit(font_surface, (205, 5))
 
     def run(self):
         while 1:
@@ -196,7 +208,7 @@ class Bricka:
             pygame.draw.circle(self.screen, WHITE, (self.ball.left + BALL_RADIUS, self.ball.top + BALL_RADIUS),
                                BALL_RADIUS)
 
-            self.show_stats()
+            self.score_calc()
 
             pygame.display.flip()
 
