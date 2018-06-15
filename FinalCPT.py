@@ -194,7 +194,7 @@ class Bricka:
             elif self.state == STATE_BALL_IN_PADDLE:
                 self.ball.left = self.paddle.left + self.paddle.width / 2 #paddle movement when ball is not in air yet
                 self.ball.top = self.paddle.top - self.ball.height
-                self.show_message("PRESS SPACE TO LAUNCH THE BALL, USE THE LEFT AND RIGHT ARROW KEYS TO MOVE AROUND") #alerting user of events that start the game
+                self.show_message("PRESS SPACE TO LAUNCH THE BALL, USE ARROW KEYS TO MOVE AROUND") #alerting user of events that start the game
             elif self.state == STATE_GAME_OVER:
                 self.show_message("GAME OVER. PRESS ENTER TO PLAY AGAIN")
             elif self.state == STATE_WON:
