@@ -48,7 +48,7 @@ class Bricka:
             self.font = None
 
         pygame.mixer.music.load('GameMusic.mp3')
-        pygame.mixer.music.set_volume(0.05)
+        pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play(-3)
 
         self.init_game()
@@ -98,7 +98,7 @@ class Bricka:
             self.ball_vel = [10, -10]
             self.state = STATE_PLAYING
             pygame.mixer.music.load('GameMusic.mp3')
-            pygame.mixer.music.set_volume(0.05)
+            pygame.mixer.music.set_volume(0.5)
             pygame.mixer.music.play(-3)
         elif keys[pygame.K_RETURN] and (self.state == STATE_GAME_OVER or self.state == STATE_WON):
             self.init_game()
@@ -194,7 +194,7 @@ class Bricka:
             elif self.state == STATE_BALL_IN_PADDLE:
                 self.ball.left = self.paddle.left + self.paddle.width / 2 #paddle movement when ball is not in air yet
                 self.ball.top = self.paddle.top - self.ball.height
-                self.show_message("PRESS SPACE TO LAUNCH THE BALL") #alerting user of events that start the game
+                self.show_message("PRESS SPACE TO LAUNCH THE BALL, USE THE LEFT AND RIGHT ARROW KEYS TO MOVE AROUND") #alerting user of events that start the game
             elif self.state == STATE_GAME_OVER:
                 self.show_message("GAME OVER. PRESS ENTER TO PLAY AGAIN")
             elif self.state == STATE_WON:
