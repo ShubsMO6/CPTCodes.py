@@ -98,7 +98,7 @@ class Bricka:
             self.ball_vel = [10, -10]
             self.state = STATE_PLAYING
             pygame.mixer.music.load('GameMusic.mp3')
-            pygame.mixer.music.set_volume(0.5)
+            pygame.mixer.music.set_volume(0.05)
             pygame.mixer.music.play(-3)
         elif keys[pygame.K_RETURN] and (self.state == STATE_GAME_OVER or self.state == STATE_WON):
             self.init_game()
@@ -139,7 +139,7 @@ class Bricka:
         if len(self.bricks) == 0:
             self.state = STATE_WON
 
-        if self.ball.colliderect(self.paddle):
+        if self.ball.colliderect(self.paddle): #describes what is to happen when the ball collides with an object
             self.ball.top = PADDLE_Y - BALL_DIAMETER
             self.ball_vel[1] = -self.ball_vel[1]
         elif self.ball.top > self.paddle.top:
@@ -160,18 +160,19 @@ class Bricka:
             y = (SCREEN_SIZE[1] - size[1]) / 2
             self.screen.blit(font_surface, (x, y))
 
-    def score_calc(self):
+    def score_calc(self): #calculates and reports the score onto the screen
         f = open('score.txt', 'r')
         self.highscore = f.readline()
-        if self.score > int(self.highscore):
+        if int(self.score) > int(self.highscore):
             self.highscore = self.score
             f = open('score.txt', 'w')
             f.write(str(self.highscore))
+
         if self.font:
-            if int(self.score) > int(self.highscore):
+            if int(self.score) == int(self.highscore) and self.state == STATE_GAME_OVER:
                 f = open('score.txt', 'r')
                 self.score = f.readline()
-                font_surface = self.font.render("SCORE: " + str(self.score) + " LIVES: " + " YOU GOT A HIGH-SCORE! "+ str(self.lives), False, WHITE)
+                font_surface = self.font.render("SCORE: " + str(self.score) + " LIVES: " + str(self.lives) + "    YOU GOT A HIGH-SCORE! ", False, WHITE)
                 self.screen.blit(font_surface, (205, 5))
             else:
                 font_surface = self.font.render("SCORE: " + str(self.score) + " LIVES: " + str(self.lives), False, WHITE)
