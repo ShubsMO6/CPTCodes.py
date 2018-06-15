@@ -48,7 +48,7 @@ class Bricka:
             self.font = None
 
         pygame.mixer.music.load('GameMusic.mp3')
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.set_volume(0.05)
         pygame.mixer.music.play(-1)
 
         self.init_game()
@@ -144,6 +144,9 @@ class Bricka:
             if self.lives > 0:
                 self.state = STATE_BALL_IN_PADDLE
             else:
+                pygame.mixer.music.load('GameOver.mp3')
+                pygame.mixer.music.set_volume(0.05)
+                pygame.mixer.music.play(1)
                 self.state = STATE_GAME_OVER
 
 
